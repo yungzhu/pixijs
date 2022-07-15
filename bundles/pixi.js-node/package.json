@@ -74,6 +74,5 @@
   "nodeDependencies": ["fs", "path"],
   "publishConfig": {
     "access": "public"
-  },
-  "transpile": "es6"
+  }
 }

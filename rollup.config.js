@@ -41,7 +41,7 @@ function prodName(name)
 
 async function main()
 {
-    let commonPlugins = [
+    const commonPlugins = [
         sourcemaps(),
         resolve({
             browser: true,
@@ -57,7 +57,7 @@ async function main()
         }),
     ];
 
-    let plugins = [
+    const plugins = [
         preprocessPlugin(true),
         esbuild({
             target: moduleTarget,
@@ -73,7 +73,7 @@ async function main()
         ...commonPlugins
     ];
 
-    let prodPlugins = [
+    const prodPlugins = [
         preprocessPlugin(false),
         esbuild({
             target: moduleTarget,
@@ -134,9 +134,6 @@ async function main()
             dependencies,
             nodeDependencies,
             peerDependencies,
-            // TODO: remove this in v7, along with the declaration in the package.json
-            // This is a temporary fix to skip transpiling on the @pixi/node package
-            transpile
         } = pkg.config;
 
         const banner = [
@@ -156,47 +153,6 @@ async function main()
         const basePath = path.relative(__dirname, pkg.dir);
         const input = path.join(basePath, 'src/index.ts');
         const freeze = false;
-
-        if (transpile === 'es6')
-        {
-            // TODO: this hack is for the @pixi/node package to skip transpiling.
-            // This can be removed in v7 where transpiling is no longer required.
-            commonPlugins = [
-                sourcemaps(),
-                resolve({
-                    browser: true,
-                    preferBuiltins: false,
-                }),
-                commonjs(),
-                json(),
-                // TODO: We do still need to keep this plugin for the @pixi/node package as `importHelpers` is required
-                typescript({
-                    importHelpers: true,
-                    target: 'ES2020',
-                }),
-                string({
-                    include: [
-                        '**/*.frag',
-                        '**/*.vert',
-                    ],
-                }),
-            ];
-
-            plugins = [
-                preprocessPlugin(true),
-                ...commonPlugins
-            ];
-
-            prodPlugins = [
-                preprocessPlugin(false),
-                ...commonPlugins,
-                terser({
-                    output: {
-                        comments: (node, comment) => comment.line === 1,
-                    },
-                })
-            ];
-        }
 
         results.push({
             input,
