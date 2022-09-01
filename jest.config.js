@@ -1,16 +1,19 @@
 module.exports = {
     testPathIgnorePatterns: ['/node_modules/', '/src/', '/dist/', '/lib/'],
     preset: 'ts-jest/presets/js-with-ts',
-    runner: 'jest-electron/runner',
-    testEnvironment: 'jest-electron/environment',
+    // runner: 'jest-electron/runner',
+    // testEnvironment: 'jest-electron/environment',
+    runner: '@kayahr/jest-electron-runner',
+    testEnvironment: '@kayahr/jest-electron-runner/environment',
     setupFilesAfterEnv: [
         'jest-extended/all',
+        './test/debug.js',
     ],
     globalSetup: '<rootDir>/test/jest-global-setup.ts',
     globalTeardown: '<rootDir>/test/jest-global-teardown.ts',
     transform: {
-        '\\.vert$': 'jest-raw-loader',
-        '\\.frag$': 'jest-raw-loader',
+        '\\.vert$': '<rootDir>/test/jest-raw-loader.js',
+        '\\.frag$': '<rootDir>/test/jest-raw-loader.js',
     },
     moduleNameMapper: {
         '^@pixi/(.*)$': '<rootDir>/packages/$1/src',
