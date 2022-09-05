@@ -210,8 +210,6 @@ describe('MaskSystem', () =>
     // eslint-disable-next-line func-names
     it('should correctly calculate alpha mask area if filter is present', function ()
     {
-        // fixes slow runs on CI #6604
-        jest.setTimeout(5000);
         // the bug was fixed in #5444
         renderer.resize(10, 10);
 

@@ -1,13 +1,11 @@
 module.exports = {
     testPathIgnorePatterns: ['/node_modules/', '/src/', '/dist/', '/lib/', '/out/'],
     preset: 'ts-jest/presets/js-with-ts',
-    // runner: 'jest-electron/runner',
-    // testEnvironment: 'jest-electron/environment',
     runner: '@kayahr/jest-electron-runner',
     testEnvironment: '@kayahr/jest-electron-runner/environment',
     setupFilesAfterEnv: [
         'jest-extended/all',
-        './test/debug.js',
+        // './test/debug.js',
     ],
     globalSetup: '<rootDir>/test/jest-global-setup.ts',
     globalTeardown: '<rootDir>/test/jest-global-teardown.ts',
@@ -34,4 +32,5 @@ module.exports = {
         '!<rootDir>/packages/polyfill/**/*.ts',
     ],
     coverageDirectory: '<rootDir>/dist/coverage',
+    testTimeout: 10000
 };

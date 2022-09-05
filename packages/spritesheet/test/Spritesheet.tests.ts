@@ -95,7 +95,6 @@ describe('Spritesheet', () =>
 
     it('should create instance with scale resolution', (done) =>
     {
-        jest.setTimeout(10000);
         // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
         const data = require(path.resolve(resources, 'building1.json'));
         const image = new Image();

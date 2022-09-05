@@ -21,8 +21,6 @@ describe('BitmapFont', () =>
         // eslint-disable-next-line func-names
         it('should register the font if a name is provided', function ()
         {
-            jest.setTimeout(8000);
-
             expect(BitmapFont.available.foo).toBeUndefined();
 
             const font = BitmapFont.from('foo');

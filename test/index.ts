@@ -48,7 +48,7 @@ if (!availableSuites.length)
 }
 
 const tests = availableSuites.map((pkg) => pkg.tests).join(' ');
-const out = exec(`jest ${tests} --colors`);
+const out = exec(`jest ${tests} --colors --runInBand`);
 
 out.stdout.pipe(process.stdout);
 out.stderr.pipe(process.stderr);

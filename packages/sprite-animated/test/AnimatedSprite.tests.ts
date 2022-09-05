@@ -131,7 +131,6 @@ describe('AnimatedSprite', () =>
         // eslint-disable-next-line func-names
         it('should fire onComplete', (done) =>
         {
-            jest.setTimeout(5000);
             sprite.onComplete = () =>
             {
                 sprite.onComplete = null;
@@ -143,7 +142,6 @@ describe('AnimatedSprite', () =>
 
         it('should the current texture be the last item in textures', (done) =>
         {
-            jest.setTimeout(5000);
             sprite.play();
             sprite.onComplete = () =>
             {
@@ -173,7 +171,6 @@ describe('AnimatedSprite', () =>
 
         it('should fire frame after start frame during one play and fire onComplete', (done) =>
         {
-            jest.setTimeout(5000);
             const frameIds = [] as number[];
 
             sprite.onComplete = () =>
@@ -267,7 +264,6 @@ describe('AnimatedSprite', () =>
 
         it('should fire every frame(except current) during one play', (done) =>
         {
-            jest.setTimeout(10000);
             const frameIds = [] as number[];
 
             sprite.gotoAndStop(0);
@@ -296,7 +292,6 @@ describe('AnimatedSprite', () =>
 
         it('should fire every frame(except current) during one play - reverse', (done) =>
         {
-            jest.setTimeout(10000);
             const frameIds = [] as number[];
 
             sprite.gotoAndStop(2);
@@ -323,7 +318,6 @@ describe('AnimatedSprite', () =>
 
         it('should fire every frame(except current) during one play - from not start/end', (done) =>
         {
-            jest.setTimeout(10000);
             const frameIds = [] as number[];
 
             sprite.gotoAndStop(1);
