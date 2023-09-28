@@ -9,6 +9,7 @@
     "./lib/assets/init.*",
     "./lib/spritesheet/init.*",
     "./lib/rendering/init.*",
+    "./lib/prepare/init.*",
     "./lib/all.*"
   ],
   "exports": {
@@ -68,6 +69,14 @@
       },
       "require": {
         "default": "./lib/rendering/init.js"
+      }
+    },
+    "./prepare": {
+      "import": {
+        "default": "./lib/prepare/init.mjs"
+      },
+      "require": {
+        "default": "./lib/prepare/init.js"
       }
     },
     "./spritesheet": {
