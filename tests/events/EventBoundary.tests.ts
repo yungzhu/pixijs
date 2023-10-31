@@ -4,7 +4,7 @@ import { Container } from '../../src/scene/container/Container';
 import { Graphics } from '../../src/scene/graphics/shared/Graphics';
 import { getApp } from '../utils/getApp';
 
-function graphicsWithRect(x: number, y: number, width: number, height: number)
+export function graphicsWithRect(x: number, y: number, width: number, height: number)
 {
     const graphics = new Graphics();
 
@@ -13,7 +13,7 @@ function graphicsWithRect(x: number, y: number, width: number, height: number)
     return graphics;
 }
 
-function id(container: Container, id: string)
+export function id(container: Container, id: string)
 {
     (container as any).__id = id;
 
