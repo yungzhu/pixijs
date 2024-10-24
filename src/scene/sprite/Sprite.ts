@@ -1,7 +1,7 @@
 import { ObservablePoint } from '../../maths/point/ObservablePoint';
 import { Texture } from '../../rendering/renderers/shared/texture/Texture';
 import { updateQuadBounds } from '../../utils/data/updateQuadBounds';
-import { ViewContainer } from '../view/View';
+import { ViewContainer } from '../view/ViewContainer';
 
 import type { Size } from '../../maths/misc/Size';
 import type { PointData } from '../../maths/point/PointData';
@@ -75,7 +75,6 @@ export class Sprite extends ViewContainer
 
     // sprite specific..
     public _texture: Texture;
-    public _didSpriteUpdate = false;
 
     private readonly _sourceBounds: BoundsData = { minX: 0, maxX: 1, minY: 0, maxY: 0 };
     private _sourceBoundsDirty = true;
@@ -221,22 +220,10 @@ export class Sprite extends ViewContainer
         bounds.addFrame(_bounds.minX, _bounds.minY, _bounds.maxX, _bounds.maxY);
     }
 
-    public override onViewUpdate()
+    protected override onViewUpdate()
     {
-        this._didViewChangeTick++;
-
-        this._didSpriteUpdate = true;
         this._sourceBoundsDirty = this._boundsDirty = true;
-
-        if (this.didViewUpdate) return;
-        this.didViewUpdate = true;
-
-        const renderGroup = this.renderGroup || this.parentRenderGroup;
-
-        if (renderGroup)
-        {
-            renderGroup.onChildViewUpdate(this);
-        }
+        super.onViewUpdate();
     }
 
     protected override _updateBounds()
@@ -345,11 +332,7 @@ export class Sprite extends ViewContainer
      */
     public override getSize(out?: Size): Size
     {
-        if (!out)
-        {
-            out = {} as Size;
-        }
-
+        out ||= {} as Size;
         out.width = Math.abs(this.scale.x) * this._texture.orig.width;
         out.height = Math.abs(this.scale.y) * this._texture.orig.height;
 
@@ -364,28 +347,17 @@ export class Sprite extends ViewContainer
      */
     public override setSize(value: number | Optional<Size, 'height'>, height?: number)
     {
-        let convertedWidth: number;
-        let convertedHeight: number;
-
-        if (typeof value !== 'object')
+        if (typeof value === 'object')
         {
-            convertedWidth = value;
-            convertedHeight = height ?? value;
+            height = value.height ?? value.width;
+            value = value.width;
         }
         else
         {
-            convertedWidth = value.width;
-            convertedHeight = value.height ?? value.width;
+            height ??= value;
         }
 
-        if (convertedWidth !== undefined)
-        {
-            this._setWidth(convertedWidth, this._texture.orig.width);
-        }
-
-        if (convertedHeight !== undefined)
-        {
-            this._setHeight(convertedHeight, this._texture.orig.height);
-        }
+        value !== undefined && this._setWidth(value, this._texture.orig.width);
+        height !== undefined && this._setHeight(height, this._texture.orig.height);
     }
 }

@@ -51,7 +51,10 @@ export interface RenderOptions extends ClearOptions
  */
 export interface ClearOptions
 {
-    /** The render target to render. */
+    /**
+     * The render target to render. if this target is a canvas and  you are using the WebGL renderer,
+     * please ensure you have set `multiView` to `true` on renderer.
+     */
     target?: RenderSurface;
     /** The color to clear with. */
     clearColor?: ColorSource;
@@ -313,8 +316,14 @@ export class AbstractRenderer<
      */
     public resize(desiredScreenWidth: number, desiredScreenHeight: number, resolution?: number): void
     {
+        const previousResolution = this.view.resolution;
+
         this.view.resize(desiredScreenWidth, desiredScreenHeight, resolution);
         this.emit('resize', this.view.screen.width, this.view.screen.height, this.view.resolution);
+        if (resolution !== undefined && resolution !== previousResolution)
+        {
+            this.runners.resolutionChange.emit(resolution);
+        }
     }
 
     public clear(options: ClearOptions = {}): void

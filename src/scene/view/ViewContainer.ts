@@ -4,6 +4,7 @@ import { Container } from '../container/Container';
 import type { PointData } from '../../maths/point/PointData';
 import type { View } from '../../rendering/renderers/shared/view/View';
 import type { BoundsData } from '../container/bounds/Bounds';
+import type { DestroyOptions } from '../container/destroyTypes';
 
 /**
  * A ViewContainer is a type of container that represents a view.
@@ -27,7 +28,7 @@ export abstract class ViewContainer extends Container implements View
     /** @private */
     public _lastInstructionTick = -1;
 
-    protected _bounds: Bounds = new Bounds();
+    protected _bounds: Bounds = new Bounds(0, 1, 0, 0);
     protected _boundsDirty = true;
 
     /**
@@ -76,5 +77,25 @@ export abstract class ViewContainer extends Container implements View
     public abstract batched: boolean;
 
     /** @private */
-    protected abstract onViewUpdate(): void;
+    protected onViewUpdate()
+    {
+        this._didViewChangeTick++;
+
+        if (this.didViewUpdate) return;
+        this.didViewUpdate = true;
+
+        const renderGroup = this.renderGroup || this.parentRenderGroup;
+
+        if (renderGroup)
+        {
+            renderGroup.onChildViewUpdate(this);
+        }
+    }
+
+    public override destroy(options?: DestroyOptions): void
+    {
+        super.destroy(options);
+
+        this._bounds = null;
+    }
 }

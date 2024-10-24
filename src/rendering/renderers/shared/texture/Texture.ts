@@ -45,10 +45,10 @@ export type UVs = {
  * The options that can be passed to a new Texture
  * @memberof rendering
  */
-export interface TextureOptions
+export interface TextureOptions<TextureSourceType extends TextureSource = TextureSource>
 {
     /** the underlying texture data that this texture will use  */
-    source?: TextureSource;
+    source?: TextureSourceType;
     /** optional label, for debugging */
     label?: string;
     /** The rectangle frame of the texture to show */
@@ -85,7 +85,7 @@ export type TextureSourceLike = TextureSource | TextureResourceOrOptions | strin
  *
  * ```js
  *
- * const texture = await Asset.load('assets/image.png');
+ * const texture = await Assets.load('assets/image.png');
  *
  * // once Assets has loaded the image it will be available via the from method
  * const sameTexture = Texture.from('assets/image.png');
@@ -104,7 +104,7 @@ export type TextureSourceLike = TextureSource | TextureResourceOrOptions | strin
  * ```js
  * import { Sprite, Texture } from 'pixi.js';
  *
- * const texture = await Asset.load('assets/image.png');
+ * const texture = await Assets.load('assets/image.png');
  * const sprite1 = new Sprite(texture);
  * const sprite2 = new Sprite(texture);
  * ```
@@ -114,7 +114,7 @@ export type TextureSourceLike = TextureSource | TextureResourceOrOptions | strin
  * @memberof rendering
  * @class
  */
-export class Texture extends EventEmitter<{
+export class Texture<TextureSourceType extends TextureSource = TextureSource> extends EventEmitter<{
     update: Texture
     destroy: Texture
 }> implements BindableTexture
@@ -138,7 +138,7 @@ export class Texture extends EventEmitter<{
      */
     public destroyed: boolean;
 
-    public _source: TextureSource;
+    public _source: TextureSourceType;
 
     /**
      * Indicates whether the texture is rotated inside the atlas
@@ -214,12 +214,12 @@ export class Texture extends EventEmitter<{
         defaultBorders,
         rotate,
         dynamic
-    }: TextureOptions = {})
+    }: TextureOptions<TextureSourceType> = {})
     {
         super();
 
         this.label = label;
-        this.source = source?.source ?? new TextureSource();
+        this.source = (source?.source ?? new TextureSource()) as TextureSourceType;
 
         this.noFrame = !frame;
 
@@ -248,7 +248,7 @@ export class Texture extends EventEmitter<{
         this.updateUvs();
     }
 
-    set source(value: TextureSource)
+    set source(value: TextureSourceType)
     {
         if (this._source)
         {
@@ -263,7 +263,7 @@ export class Texture extends EventEmitter<{
     }
 
     /** the underlying source of the texture (equivalent of baseTexture in v7) */
-    get source(): TextureSource
+    get source(): TextureSourceType
     {
         return this._source;
     }
@@ -366,7 +366,11 @@ export class Texture extends EventEmitter<{
         this.removeAllListeners();
     }
 
-    /** call this if you have modified the `texture outside` of the constructor */
+    /**
+     * Call this if you have modified the `texture outside` of the constructor.
+     *
+     * If you have modified this texture's source, you must separately call `texture.source.update()` to see those changes.
+     */
     public update(): void
     {
         if (this.noFrame)
@@ -392,7 +396,7 @@ export class Texture extends EventEmitter<{
     /** an Empty Texture used internally by the engine */
     public static EMPTY: Texture;
     /** a White texture used internally by the engine */
-    public static WHITE: Texture;
+    public static WHITE: Texture<BufferImageSource>;
 }
 
 Texture.EMPTY = new Texture({
